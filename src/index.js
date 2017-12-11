@@ -20,7 +20,6 @@ if(module.hot){
     document.body.removeChild(element);
     element=component()
     document.body.appendChild(element)
-
   })
 
 }

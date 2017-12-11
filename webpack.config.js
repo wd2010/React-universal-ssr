@@ -2,6 +2,7 @@ const path=require('path');
 const webpack=require('webpack');
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 const config={
   context:path.join(__dirname,'./src/'),
   entry:{
@@ -9,7 +10,7 @@ const config={
     main:'./main.js',
   },
   output:{
-    filename:'output.[name].js',
+    filename:'[name].js',
     path:path.resolve(__dirname,'dist'),
     publicPath:'/'
   },
@@ -45,21 +46,5 @@ const config={
     })
   ]
 }
-
-//const compiler=webpack(config);
-//compiler.run(function doneHandler(err, stats) {
-//  //get all errors
-//  if(stats.hasErrors()){
-//    //打印错误信息
-//    printErrors(stats.compilation.errors,true);
-//  }
-//  const warnings =stats.warnings && stats.warnings.length==0;
-//  if(stats.hasWarnings()){
-//    //打印warning信息
-//    printErrors(stats.compilation.warnings);
-//  }
-//  console.log("Compilation finished!\n");
-//  console.log('=========',stats)
-//});
 
 module.exports=config
