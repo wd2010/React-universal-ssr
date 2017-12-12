@@ -9,8 +9,8 @@ class Home extends Component{
     return (
       <div>
         <p>{count}</p>
-        <button onClick={()=>add(count+1)}>dfyyy</button>
-          <Link to='/user'>user</Link>
+        <button onClick={()=>add(count+1)}>ddy</button>
+          <Link to='/user'>usdfde</Link>
       </div>
     )
   }

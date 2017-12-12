@@ -1,8 +1,6 @@
 import React from 'react'
 import {Route, Switch } from 'react-router-dom';
 import  {ConnectedRouter}  from 'react-router-redux';
-import Home from './containers/Home';
-import User from './containers/User';
 
 import Loadable from 'react-loadable';
 
@@ -15,17 +13,17 @@ const Loading=(props)=> {
 }
 
 const LoadableHome = Loadable({
-  loader: () =>import(/* webpackChunkName: 'Home' */'./containers/Home'),
+  loader: () =>import(/* webpackChunkName: 'Home' */'../containers/Home'),
   loading: Loading,
 });
 const LoadableUser = Loadable({
-  loader: () =>import(/* webpackChunkName: 'User' */'./containers/User'),
+  loader: () =>import(/* webpackChunkName: 'User' */'../containers/User'),
   loading: Loading,
 });
 
 export const routesConfig=[
-  <Route exact={true} path='/' component={Home} key='home' />,
-  <Route path='/user' component={User} key='user' />
+  <Route exact={true} path='/' component={LoadableHome} key='home' />,
+  <Route path='/user' component={LoadableUser} key='user' />
 ]
 
 const Routers=({history})=>(

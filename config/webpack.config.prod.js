@@ -11,7 +11,7 @@ const prodConfig={
   entry:()=>{
     if(isServer){
       return {
-        server: './server.js',
+        server: './app/index.js',
       }
     }else{
       return {

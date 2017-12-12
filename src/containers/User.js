@@ -14,7 +14,7 @@ class User extends Component{
         <ul>
             {
                 [1,2,3,4,5,6].map((item,index)=>(
-                    <li key={index}>aabb{item}</li>
+                    <li key={index}>aabdb{item}</li>
                 ))
             }
         </ul>

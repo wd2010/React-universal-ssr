@@ -1,11 +1,12 @@
 const path=require('path');
 const webpack=require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const rootPath=path.join(__dirname,'../')
 const devConfig={
   context: path.join(rootPath,'./src'),
   entry:{
-    client:'./app.js',
+    client:'./index.js',
     vendors:['react','react-dom','react-loadable','react-redux','redux','react-router-dom','react-router-redux','redux-thunk'],
   },
   output:{
@@ -20,9 +21,10 @@ const devConfig={
   },
   devServer:{
     contentBase:'assets',
-    hot:true
+    hot:true,
+    historyApiFallback:true,
   },
-  devtool:'eval',
+  devtool:'source-map',
   module:{
     rules:[
       {
@@ -32,7 +34,7 @@ const devConfig={
           loader:'babel-loader',
           options:{
             presets: ['env', 'react', 'stage-0'],
-            // plugins: ['transform-runtime', 'add-module-exports',],
+             plugins: [/*'transform-runtime', 'add-module-exports',*/'syntax-dynamic-import'],
           }
         }
       },{
@@ -43,6 +45,10 @@ const devConfig={
   },
   plugins:[
     new webpack.HotModuleReplacementPlugin(),
+    new ProgressBarPlugin({summary: false}),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV':JSON.stringify(process.env.NODE_ENV)
+    }),
     new webpack.optimize.CommonsChunkPlugin({
       name:['vendors','manifest'],
       minChunks:2
