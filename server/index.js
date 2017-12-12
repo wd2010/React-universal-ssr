@@ -1,5 +1,5 @@
-const a=9
+const a=6
 
-const b=8;
+const b=10;
 
 console.log(a+b)

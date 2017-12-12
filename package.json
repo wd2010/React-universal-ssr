@@ -4,16 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --hotOnly --progress ",
-    "dev:server": "cross-env NODE_ENV=production npm-run-all --parallel build:client-watch build:server-watch",
-    "build:client-watch": "cross-env BUILD_TYPE=client webpack --progress --watch ",
-    "build:server-watch": "cross-env BUILD_TYPE=server webpack --progress --watch && nodemon ./server/index.js"
+    "start": "cross-env NODE_ENV=development webpack-dev-server --hotOnly --progress --config ./config/webpack.config.dev.js ",
+    "dev:server": "cross-env NODE_ENV=production npm-run-all --parallel build:client-watch build:server-watch ",
+    "build:client-watch": "cross-env BUILD_TYPE=client webpack --progress --watch -p  --config ./config/webpack.config.prod.js",
+    "build:server-watch": "cross-env BUILD_TYPE=server webpack --progress --watch -p  --config ./config/webpack.config.prod.js",
+    "build": "cross-env NODE_ENV=production npm-run-all --parallel build:client build:server",
+    "build:client": "cross-env BUILD_TYPE=client webpack --progress -p  --config ./config/webpack.config.prod.js",
+    "build:server": "cross-env BUILD_TYPE=server webpack --progress -p  --config ./config/webpack.config.prod.js",
+    "server": "nodemon ./server/index.js --watch config --watch server"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
@@ -25,5 +31,16 @@
     "npm-run-all": "^4.1.2",
     "style-loader": "^0.19.0",
     "webpack-dev-server": "^2.9.7"
+  },
+  "dependencies": {
+    "history": "^4.7.2",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-loadable": "^5.3.1",
+    "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^5.0.0-alpha.6",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0"
   }
 }
