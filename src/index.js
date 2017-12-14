@@ -4,10 +4,10 @@ import createHistory from 'history/createBrowserHistory'
 import Loadable from 'react-loadable';
 import rootReducer from './store/reducers/index.js';
 import app from './app/index.js';
-const initialState = window.__INITIAL_STATE__;
+const initialState =window && window.__INITIAL_STATE__;
 let history=createHistory()
 let {configureStore,createApp}=app;
-let store=configureStore({initialState,rootReducer})
+let store=configureStore(initialState)
 
 const render=()=>{
   let application=createApp({store,history});
@@ -19,6 +19,8 @@ window.main = () => {
     render()
   });
 };
+
+
 
 if(process.env.NODE_ENV==='development'){
   if(module.hot){

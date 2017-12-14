@@ -3,6 +3,7 @@ const webpack=require('webpack');
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
+const { ReactLoadablePlugin } =require('react-loadable/webpack') ;
 const isServer=process.env.BUILD_TYPE==='server';
 const rootPath=path.join(__dirname,'../');
 
@@ -24,7 +25,8 @@ const prodConfig={
     filename:'[name].[hash:8].js',
     path:path.resolve(rootPath,isServer?'./dist/server':'./dist/client'),
     publicPath:'/',
-    chunkFilename: '[name]-[hash:8].js'
+    chunkFilename: '[name]-[hash:8].js',
+    libraryTarget: isServer ? 'commonjs2' : 'umd',
   },
   resolve:{
     extensions:[".js",".jsx","css","less","scss","png","jpg"],
@@ -40,7 +42,7 @@ const prodConfig={
           loader:'babel-loader',
           options:{
             presets: ['env', 'react', 'stage-0'],
-            plugins: isServer ? ['dynamic-import-webpack', 'remove-webpack'] : [],
+            plugins: isServer ? ['dynamic-import-webpack'] : [],//server 动态加载的Home和User
           }
         }
       },{
@@ -54,17 +56,21 @@ const prodConfig={
   plugins:[
     new ManifestPlugin(),
     new CleanWebpackPlugin([`./dist/${isServer?'server':'client'}`],{root: rootPath,}),
-    new webpack.optimize.CommonsChunkPlugin({
-      name:['vendors','manifest'],
-      minChunks:2
+  ].concat(isServer?[
+    //server ----------
+    new ReactLoadablePlugin({
+      filename: path.join(rootPath,'./dist/server/react-loadable.json'),
     }),
-
-  ].concat(isServer?[]:[
+  ]:[
+    //client-----------
     new HtmlWebpackPlugin({
       title:'yyy',
       filename:'index.html',
       template:'./index.ejs',
-      inject:'head',
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name:['vendors','manifest'],
+      minChunks:2
     }),
   ])
 }

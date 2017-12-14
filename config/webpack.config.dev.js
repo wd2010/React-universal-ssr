@@ -60,7 +60,6 @@ const devConfig={
       title:'test1',
       filename:'index.html',
       template:'./index.ejs',
-      inject:'head',
     }),
   ],
 }
