@@ -1,8 +1,8 @@
 const path=require('path');
 const webpack=require('webpack');
-const merge = require('webpack-merge')
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 const isServer=process.env.BUILD_TYPE==='server';
 const rootPath=path.join(__dirname,'../');
 
@@ -28,26 +28,34 @@ const prodConfig={
   },
   resolve:{
     extensions:[".js",".jsx","css","less","scss","png","jpg"],
-    modules:[path.resolve(__dirname, "src"), "node_modules"],
+    modules:[path.resolve(rootPath, "src"), "node_modules"],
   },
   module:{
     rules:[
       {
         test:/\.jsx?$/,
         exclude: /node_modules/,
+        include:path.resolve(rootPath, "src"),
         use:{
           loader:'babel-loader',
+          options:{
+            presets: ['env', 'react', 'stage-0'],
+            plugins: isServer ? ['dynamic-import-webpack', 'remove-webpack'] : [],
+          }
         }
       },{
         test:/\.css$/,
+        exclude: /node_modules/,
+        include: path.resolve(rootPath, "src"),
         use: ['style-loader','css-loader']
       }
     ]
   },
   plugins:[
+    new ManifestPlugin(),
     new CleanWebpackPlugin([`./dist/${isServer?'server':'client'}`],{root: rootPath,}),
     new webpack.optimize.CommonsChunkPlugin({
-      name:['chunk','manifest'],
+      name:['vendors','manifest'],
       minChunks:2
     }),
 
@@ -55,7 +63,8 @@ const prodConfig={
     new HtmlWebpackPlugin({
       title:'yyy',
       filename:'index.html',
-      template:'./index.ejs'
+      template:'./index.ejs',
+      inject:'head',
     }),
   ])
 }

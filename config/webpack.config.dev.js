@@ -30,15 +30,18 @@ const devConfig={
       {
         test:/\.(js|jsx)$/,
         exclude: /node_modules/,
+        include:path.resolve(rootPath, "src"),
         use:{
           loader:'babel-loader',
           options:{
             presets: ['env', 'react', 'stage-0'],
-             plugins: [/*'transform-runtime', 'add-module-exports',*/'syntax-dynamic-import'],
+            plugins: [/*'transform-runtime', 'add-module-exports',*/],
           }
         }
       },{
         test:/\.css$/,
+        exclude: /node_modules/,
+        include: path.resolve(rootPath, "src"),
         use: ['style-loader','css-loader']
       }
     ]
@@ -56,7 +59,8 @@ const devConfig={
     new HtmlWebpackPlugin({
       title:'test1',
       filename:'index.html',
-      template:'./index.ejs'
+      template:'./index.ejs',
+      inject:'head',
     }),
   ],
 }
