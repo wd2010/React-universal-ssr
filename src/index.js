@@ -20,7 +20,7 @@ window.main = () => {
   });
 };
 
-
+console.log('============',process.env.NODE_ENV)
 
 if(process.env.NODE_ENV==='development'){
   if(module.hot){

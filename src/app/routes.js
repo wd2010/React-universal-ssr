@@ -5,6 +5,7 @@ import  {ConnectedRouter}  from 'react-router-redux';
 import Loadable from 'react-loadable';
 
 const Loading=(props)=> {
+  console.log('loadable:',props)
   if (props.error) {
     return <div>{props.error}</div>;
   } else {

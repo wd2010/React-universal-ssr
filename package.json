@@ -6,11 +6,11 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-dev-server --hotOnly --progress --config ./config/webpack.config.dev.js ",
     "dev:server": "cross-env NODE_ENV=production npm-run-all --parallel build:client-watch build:server-watch ",
-    "build:client-watch": "cross-env BUILD_TYPE=client webpack --progress --watch -p  --config ./config/webpack.config.prod.js",
-    "build:server-watch": "cross-env BUILD_TYPE=server webpack --progress --watch -p  --config ./config/webpack.config.prod.js",
+    "build:client-watch": "cross-env BUILD_TYPE=client webpack --progress --watch   --config ./config/webpack.config.prod.js",
+    "build:server-watch": "cross-env BUILD_TYPE=server webpack --progress --watch   --config ./config/webpack.config.prod.js",
     "build": "cross-env NODE_ENV=production npm-run-all --parallel build:client build:server",
-    "build:client": "cross-env BUILD_TYPE=client webpack --progress -p  --config ./config/webpack.config.prod.js",
-    "build:server": "cross-env BUILD_TYPE=server webpack --progress -p  --config ./config/webpack.config.prod.js",
+    "build:client": "cross-env BUILD_TYPE=client webpack --progress   --config ./config/webpack.config.prod.js",
+    "build:server": "cross-env BUILD_TYPE=server webpack --progress   --config ./config/webpack.config.prod.js",
     "server": "nodemon ./server/index.js --watch config --watch server"
   },
   "author": "",
@@ -19,7 +19,9 @@
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-dynamic-import-node": "^1.2.0",
     "babel-plugin-dynamic-import-webpack": "^1.0.2",
+    "babel-plugin-remove-webpack": "^1.1.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
@@ -40,6 +42,7 @@
   "dependencies": {
     "history": "^4.7.2",
     "koa": "^2.4.1",
+    "koa-static": "^4.0.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-helmet": "^5.2.0",

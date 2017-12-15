@@ -1,28 +1,19 @@
 import React from 'react';
-import fs from 'fs';
-import path from 'path';
+import {renderToString} from 'react-dom/server';
 import createHistory from 'history/createMemoryHistory'
 import { getBundles } from 'react-loadable/webpack';
 import stats from '../dist/server/react-loadable.json';
 import Helmet from 'react-helmet';
+import {matchPath} from 'react-router-dom';
+import Loadable from 'react-loadable';
+import getClient from './getClient';
 
-const getClientInstance=()=>{
-  let clientFolder=path.resolve(__dirname,'../dist/client');
-  let serverFolder=path.resolve(__dirname,'../dist/server');
-  let manifest=require(path.join(`${serverFolder}`,'./manifest.json') )
-  let code=require(`${serverFolder}/${manifest['server.js']}`);//文件必须是libraryTarget为commonjs或commonjs2
-  let {configureStore,createApp}=code && code.__esModule ? code.default : code;
-  let html=fs.readFileSync(path.join(clientFolder,'index.html'),'utf-8');
-  return {configureStore,createApp,html}
-}
-
-const createStore=()=>{
-  let {configureStore,createApp,html}=getClientInstance();
+const createStore=(configureStore)=>{
   let store=configureStore()
   return store;
 }
 
-const createTags=()=>{
+const createTags=(modules)=>{
   let bundles = getBundles(stats, modules);
   let scriptfiles = bundles.filter(bundle => bundle.file.endsWith('.js'));
   let stylefiles = bundles.filter(bundle => bundle.file.endsWith('.css'));
@@ -40,33 +31,48 @@ const prepHTML=(data,{html,head,rootString,scripts,styles,initState})=>{
   return data;
 }
 
-const makeup=(ctx)=>{
-  let {createApp,html}=getClientInstance()
-  let store=createStore(ctx);
+const getMatch=(routesArray, url)=>{
+
+  return routesArray.some(router=>matchPath(url,{
+    path: router.props.path,
+    exact: router.props.exact,
+  }))
+}
+
+const makeup=(ctx,configureStore,createApp,html)=>{
+  let store=createStore(configureStore);
   let initState=store.getState();
   let history=createHistory({initialEntries:[ctx.req.url]});
-  let {scripts,styles}=createTags()
+
+  let modules=[];
+
   let rootString= renderToString(
-    <Loadable.Capture report={moduleName => modules.push(moduleName)}>
-      {createApp({store,history})}
-    </Loadable.Capture>
-  );
+    createApp({store,history})(modules)
+    );
+  let {scripts,styles}=createTags(modules)
+
+  const helmet=Helmet.renderStatic();
   let renderedHtml=prepHTML(html,{
     html:helmet.htmlAttributes.toString(),
     head:helmet.title.toString()+helmet.meta.toString()+helmet.link.toString(),
     rootString,
-    scripts:scripts,
-    styles:styles,
+    scripts,
+    styles,
     initState
   })
   return renderedHtml;
 }
 
-
+let {configureStore,createApp,html,routesConfig}=getClient();
 
 const clientRouter=async(ctx,next)=>{
-  let renderedHtml=makeup(ctx);
-  ctx.body=renderedHtml
+  let isMatch=getMatch(routesConfig,ctx.req.url);
+  if(isMatch){
+    let renderedHtml=await makeup(ctx,configureStore,createApp,html);
+    ctx.body=renderedHtml
+  }else{
+    await next()
+  }
 }
 
 export default clientRouter;

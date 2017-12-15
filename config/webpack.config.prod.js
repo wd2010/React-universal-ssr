@@ -26,7 +26,7 @@ const prodConfig={
     path:path.resolve(rootPath,isServer?'./dist/server':'./dist/client'),
     publicPath:'/',
     chunkFilename: '[name]-[hash:8].js',
-    libraryTarget: isServer ? 'commonjs2' : 'umd',
+    libraryTarget: isServer ? 'umd' : 'umd',
   },
   resolve:{
     extensions:[".js",".jsx","css","less","scss","png","jpg"],
@@ -42,7 +42,7 @@ const prodConfig={
           loader:'babel-loader',
           options:{
             presets: ['env', 'react', 'stage-0'],
-            plugins: isServer ? ['dynamic-import-webpack'] : [],//server 动态加载的Home和User
+            plugins: isServer ? ['dynamic-import-webpack','remove-webpack',"react-loadable/babel"] : [],//server 动态加载的Home和User,require动态加载时会导致一些全局问题，remove-webpack使用IIFE自动执行函数解决
           }
         }
       },{
@@ -56,11 +56,12 @@ const prodConfig={
   plugins:[
     new ManifestPlugin(),
     new CleanWebpackPlugin([`./dist/${isServer?'server':'client'}`],{root: rootPath,}),
+    new webpack.DefinePlugin({
+      'process.env.BUILD_TYPE':JSON.stringify(process.env.BUILD_TYPE)
+    }),
   ].concat(isServer?[
     //server ----------
-    new ReactLoadablePlugin({
-      filename: path.join(rootPath,'./dist/server/react-loadable.json'),
-    }),
+
   ]:[
     //client-----------
     new HtmlWebpackPlugin({
@@ -71,6 +72,9 @@ const prodConfig={
     new webpack.optimize.CommonsChunkPlugin({
       name:['vendors','manifest'],
       minChunks:2
+    }),
+    new ReactLoadablePlugin({
+      filename: path.join(rootPath,'./dist/server/react-loadable.json'),
     }),
   ])
 }
