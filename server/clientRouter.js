@@ -7,6 +7,7 @@ import Helmet from 'react-helmet';
 import {matchPath} from 'react-router-dom';
 import Loadable from 'react-loadable';
 import getClient from './getClient';
+// import rootReducer from '../src/store/reducers';
 
 const createStore=(configureStore)=>{
   let store=configureStore()
@@ -47,8 +48,10 @@ const makeup=(ctx,configureStore,createApp,html)=>{
   let modules=[];
 
   let rootString= renderToString(
-    createApp({store,history})(modules)
-    );
+    <Loadable.Capture report={moduleName => modules.push(moduleName)}>
+      {createApp({store,history})}
+    </Loadable.Capture>
+  );
   let {scripts,styles}=createTags(modules)
 
   const helmet=Helmet.renderStatic();

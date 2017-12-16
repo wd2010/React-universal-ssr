@@ -2,7 +2,7 @@ import React from 'react';
 import {hydrate} from 'react-dom';
 import createHistory from 'history/createBrowserHistory'
 import Loadable from 'react-loadable';
-import rootReducer from './store/reducers/index.js';
+// import rootReducer from './store/reducers/index.js';
 import app from './app/index.js';
 const initialState =window && window.__INITIAL_STATE__;
 let history=createHistory()
@@ -27,6 +27,7 @@ if(process.env.NODE_ENV==='development'){
     module.hot.accept('./store/reducers/index.js',()=>{
       import('./store/reducers/index.js').then(({default:module})=>{
         store.replaceReducer(module)
+        // render()
       })
     })
     module.hot.accept('./app/index.js',()=>{

@@ -9,7 +9,7 @@ class Home extends Component{
     return (
       <div>
         <p>{count}</p>
-        <button onClick={()=>add(count+1)}>yyy</button>
+        <button onClick={()=>add(count+1)}>55y</button>
           <Link to='/user'>6ssdsdfsfdfdf</Link>
       </div>
     )
