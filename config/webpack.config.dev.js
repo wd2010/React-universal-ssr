@@ -36,6 +36,7 @@ const devConfig={
           options:{
             presets: ['env', 'react', 'stage-0'],
             plugins: [/*'transform-runtime', 'add-module-exports',*/],
+            cacheDirectory: true,
           }
         }
       },{

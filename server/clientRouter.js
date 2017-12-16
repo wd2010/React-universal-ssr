@@ -7,7 +7,7 @@ import Helmet from 'react-helmet';
 import {matchPath} from 'react-router-dom';
 import Loadable from 'react-loadable';
 import getClient from './getClient';
-// import rootReducer from '../src/store/reducers';
+import { matchRoutes } from 'react-router-config';
 
 const createStore=(configureStore)=>{
   let store=configureStore()
@@ -40,8 +40,7 @@ const getMatch=(routesArray, url)=>{
   }))
 }
 
-const makeup=(ctx,configureStore,createApp,html)=>{
-  let store=createStore(configureStore);
+const makeup=(ctx,store,createApp,html)=>{
   let initState=store.getState();
   let history=createHistory({initialEntries:[ctx.req.url]});
 
@@ -69,9 +68,16 @@ const makeup=(ctx,configureStore,createApp,html)=>{
 let {configureStore,createApp,html,routesConfig}=getClient();
 
 const clientRouter=async(ctx,next)=>{
+  let store=createStore(configureStore);
+
+  let branch=matchRoutes(routesConfig,ctx.req.url)
+  await branch.map(({route,match})=>{
+    return route.props.thunk?route.props.thunk(store):Promise.resolve(null)
+  });
+
   let isMatch=getMatch(routesConfig,ctx.req.url);
   if(isMatch){
-    let renderedHtml=await makeup(ctx,configureStore,createApp,html);
+    let renderedHtml=await makeup(ctx,store,createApp,html);
     ctx.body=renderedHtml
   }else{
     await next()

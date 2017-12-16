@@ -6,7 +6,7 @@ import {Link } from 'react-router-dom';
 
 class User extends Component{
   handerClick(e){
-    import('./Model.js').then(({default:Model})=>{
+    import(/* webpackChunkName: 'Model' */'./Model.js').then(({default:Model})=>{
       console.log('====',Model)
     })
   }
