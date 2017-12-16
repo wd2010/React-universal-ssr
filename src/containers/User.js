@@ -5,19 +5,26 @@ import * as actions  from '../store/actions/home';
 import {Link } from 'react-router-dom';
 
 class User extends Component{
+  handerClick(e){
+    import('./Model.js').then(({default:Model})=>{
+      console.log('====',Model)
+    })
+  }
+
   render(){
     let {add,count}=this.props;
     return (
       <div>
-          <p>{count}</p>
+        <p>{count}</p>
         <Link to='/'>ddsdfd</Link>
         <ul>
             {
                 [1,2,3,4,5,6].map((item,index)=>(
-                    <li key={index}>aabdb{item}</li>
+                    <li key={index}>aabdddb{item}</li>
                 ))
             }
         </ul>
+        <button onClick={()=>this.handerClick()}>model</button>
       </div>
     )
   }
