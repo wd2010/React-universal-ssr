@@ -1,5 +1,5 @@
 import React from 'react';
-import {hydrate} from 'react-dom';
+import {hydrate,render} from 'react-dom';
 import createHistory from 'history/createBrowserHistory'
 import Loadable from 'react-loadable';
 // import rootReducer from './store/reducers/index.js';
@@ -9,14 +9,14 @@ let history=createHistory()
 let {configureStore,createApp}=app;
 let store=configureStore(initialState)
 
-const render=()=>{
+const renderApp=()=>{
   let application=createApp({store,history});
-  hydrate(application,document.getElementById('root'));
+  render(application,document.getElementById('root'));
 }
 
 window.main = () => {
   Loadable.preloadReady().then(() => {
-    render()
+    renderApp()
   });
 };
 
@@ -36,7 +36,7 @@ if(process.env.NODE_ENV==='development'){
         import('./store/reducers/index.js').then(({default:module})=>{
           store.replaceReducer(module)
           let application=createApp({store,history});
-          hydrate(application,document.getElementById('root'));
+          render(application,document.getElementById('root'));
         })
       })
     })
