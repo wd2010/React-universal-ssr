@@ -42,7 +42,7 @@ const prodConfig={
           loader:'babel-loader',
           options:{
             presets: ['env', 'react', 'stage-0'],
-            plugins: isServer ? ['dynamic-import-webpack','remove-webpack',"react-loadable/babel"] : ["react-loadable/babel"],//server 动态加载的Home和User,require动态加载时会导致一些全局问题，remove-webpack使用IIFE自动执行函数解决
+            plugins: isServer ? ['dynamic-import-webpack','remove-webpack',"react-loadable/babel"] : ['transform-runtime',"react-loadable/babel",],//server 动态加载的Home和User,require动态加载时会导致一些全局问题，remove-webpack使用IIFE自动执行函数解决
             cacheDirectory: true,
           }
         }

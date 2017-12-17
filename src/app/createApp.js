@@ -1,6 +1,6 @@
 import React from 'react';
 import {Provider} from 'react-redux';
-import Routers from './routes';
+import Routers from './router/index';
 import { ConnectedRouter } from 'react-router-redux';
 import {Route, Switch } from 'react-router-dom';
 

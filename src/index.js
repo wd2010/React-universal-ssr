@@ -24,15 +24,15 @@ console.log('============',process.env.NODE_ENV)
 if(process.env.NODE_ENV==='development'){
   if(module.hot){
     module.hot.accept('./store/reducers/index.js',()=>{
-      let {default:newReducer}=require('./store/reducers/index.js');
+      let newReducer=require('./store/reducers/index.js');
       store.replaceReducer(newReducer)
       /*import('./store/reducers/index.js').then(({default:module})=>{
         store.replaceReducer(module)
       })*/
     })
     module.hot.accept('./app/index.js',()=>{
-      let {default:{createApp}}=require('./app/index.js');
-      let {default:newReducer}=require('./store/reducers/index.js');
+      let {createApp}=require('./app/index.js');
+      let newReducer=require('./store/reducers/index.js');
       store.replaceReducer(newReducer)
       let application=createApp({store,history});
       hydrate(application,document.getElementById('root'));

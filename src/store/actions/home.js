@@ -1,16 +1,14 @@
 import {ADD,GET_HOME_INFO} from '../constants'
-
-export const add=(count)=>({
-  type: ADD,
-  count,
-})
+export const add=(count)=>({type: ADD, count,})
 
 export const getHomeInfo=()=>async(dispatch,getState)=>{
-  let homeInfo=await new Promise(resolve=>{
-    let homeInfo={name:'wd2010',age:'22'}
-    setTimeout(()=>resolve(homeInfo),1000)
+  let {name,age}=getState().homeInfo;
+  if(name || age)return
+  await new Promise(resolve=>{
+    let homeInfo={name:'wd2010',age:'25'}
+    console.log('-----------请求getHomeInfo')
+    setTimeout(()=>resolve(homeInfo),2000)
+  }).then(homeInfo=>{
+    dispatch({type:GET_HOME_INFO,data:homeInfo})
   })
-  dispatch({type:GET_HOME_INFO,data:homeInfo})
 }
-
-//export const getHomeInfo=()=>({type:GET_HOME_INFO,data:{name:'wd2010',age:'23'}})

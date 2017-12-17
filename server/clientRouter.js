@@ -33,10 +33,9 @@ const prepHTML=(data,{html,head,rootString,scripts,styles,initState})=>{
 }
 
 const getMatch=(routesArray, url)=>{
-
   return routesArray.some(router=>matchPath(url,{
-    path: router.props.path,
-    exact: router.props.exact,
+    path: router.path,
+    exact: router.exact,
   }))
 }
 
@@ -71,10 +70,13 @@ const clientRouter=async(ctx,next)=>{
   let store=createStore(configureStore);
 
   let branch=matchRoutes(routesConfig,ctx.req.url)
-  await branch.map(({route,match})=>{
-    return route.props.thunk?route.props.thunk(store):Promise.resolve(null)
+  let promises = branch.map(({route,match})=>{
+    return route.thunk?(route.thunk(store)):Promise.resolve(null)
   });
-
+  await Promise.all(promises)
+    .then(()=>console.log('000000',store.getState()))
+    .catch(err=>console.log('err:---',err))
+  console.log('ppppppppppppppppp',ctx.req.url)
   let isMatch=getMatch(routesConfig,ctx.req.url);
   if(isMatch){
     let renderedHtml=await makeup(ctx,store,createApp,html);
