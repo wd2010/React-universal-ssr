@@ -8,13 +8,16 @@ require('babel-register')({
 const app=require('./app.js').default,
   clientRouter=require('./clientRouter.js').default,
   port = process.env.port || 3002,
-  serve = require("koa-static"),
+  staticCache  = require("koa-static-cache"),
   path =require('path'),
   Loadable=require('react-loadable');
 
 app.use(clientRouter);
-app.use(serve(path.resolve(__dirname,'../dist/client')));
-app.use(serve(path.resolve(__dirname,'../dist/server')));
+app.use(staticCache (path.resolve(__dirname,'../dist/client'),{
+  maxAge: 365 * 24 * 60 * 60,
+  gzip:true
+}));
+
 
 console.log(`\n==> 🌎  Listening on port ${port}. Open up http://localhost:${port}/ in your browser.\n`)
 Loadable.preloadAll().then(() => {

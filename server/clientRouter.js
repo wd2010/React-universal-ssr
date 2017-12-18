@@ -76,14 +76,13 @@ const clientRouter=async(ctx,next)=>{
   await Promise.all(promises)
     .then(()=>console.log('000000',store.getState()))
     .catch(err=>console.log('err:---',err))
-  console.log('ppppppppppppppppp',ctx.req.url)
+
   let isMatch=getMatch(routesConfig,ctx.req.url);
   if(isMatch){
     let renderedHtml=await makeup(ctx,store,createApp,html);
     ctx.body=renderedHtml
-  }else{
-    await next()
   }
+  await next()
 }
 
 export default clientRouter;
