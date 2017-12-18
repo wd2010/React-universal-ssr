@@ -2,6 +2,8 @@ const path=require('path');
 const webpack=require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const rootPath=path.join(__dirname,'../')
 const devConfig={
   context: path.join(rootPath,'./src'),
@@ -40,14 +42,39 @@ const devConfig={
           }
         }
       },{
-        test:/\.css$/,
-        exclude: /node_modules/,
+        test:/\.(css|sess)$/,
+        exclude:/node_modules/,
         include: path.resolve(rootPath, "src"),
-        use: ['style-loader','css-loader']
+        use: ExtractTextPlugin.extract({
+          fallback:{
+            loader: 'style-loader',//style-loader 将css插入到页面的style标签
+            options:{singleton:true},//单例模式
+          },
+          use:[{
+            loader: 'css-loader',//css-loader 是处理css文件中的url(),require()等
+            options: {
+              sourceMap:true,
+              importLoader:1,
+            }
+          },{
+            loader:'postcss-loader',
+            options: {
+              plugins:()=>[autoprefixer({browsers:'last 5 versions'})],
+              sourceMap:true,
+            }
+          },{
+            loader:'sess-loader',
+            options:{
+              sourceMap:true,
+            }
+          }]
+        }),
       }
     ]
   },
   plugins:[
+    new webpack.NoEmitOnErrorsPlugin(),
+    new CopyWebpackPlugin([{from:'favicon.ico'}]),
     new webpack.HotModuleReplacementPlugin(),
     new ProgressBarPlugin({summary: false}),
     new webpack.DefinePlugin({

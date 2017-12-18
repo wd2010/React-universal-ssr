@@ -7,7 +7,7 @@ export const getHomeInfo=()=>async(dispatch,getState)=>{
   await new Promise(resolve=>{
     let homeInfo={name:'wd2010',age:'25'}
     console.log('-----------请求getHomeInfo')
-    setTimeout(()=>resolve(homeInfo),2000)
+    setTimeout(()=>resolve(homeInfo),1000)
   }).then(homeInfo=>{
     dispatch({type:GET_HOME_INFO,data:homeInfo})
   })

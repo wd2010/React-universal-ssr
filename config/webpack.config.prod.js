@@ -4,6 +4,7 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const { ReactLoadablePlugin } =require('react-loadable/webpack') ;
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const isServer=process.env.BUILD_TYPE==='server';
 const rootPath=path.join(__dirname,'../');
 
@@ -47,19 +48,45 @@ const prodConfig={
           }
         }
       },{
-        test:/\.css$/,
-        exclude: /node_modules/,
+        test:/\.(css|sess)$/,
+        exclude:/node_modules/,
         include: path.resolve(rootPath, "src"),
-        use: ['style-loader','css-loader']
+        use: ExtractTextPlugin.extract({
+          fallback:{
+            loader: 'style-loader',//style-loader 将css插入到页面的style标签
+            options:{singleton:true}
+          },
+          use:[{
+            loader: 'css-loader',//css-loader 是处理css文件中的url(),require()等
+            options: {
+              minimize:true,
+              importLoader:1,
+            }
+          },{
+            loader:'postcss-loader',
+            options: {
+              plugins:()=>[autoprefixer({browsers:'last 5 versions'})],
+              minimize:true,
+            }
+          },{
+            loader:'sess-loader',
+            options:{
+              minimize:true,
+            }
+          }]
+        }),
       }
     ]
   },
   plugins:[
     new ManifestPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
+    new CopyWebpackPlugin([{from:'favicon.ico',to:rootPath+'./dist/client'}]),
     new CleanWebpackPlugin([`./dist/${isServer?'server':'client'}`],{root: rootPath,}),
     new webpack.DefinePlugin({
       'process.env.BUILD_TYPE':JSON.stringify(process.env.BUILD_TYPE)
     }),
+    new webpack.optimize.OccurrenceOrderPlugin(),
   ].concat(isServer?[
     //server ----------
 
