@@ -3,10 +3,9 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions  from '../store/actions/home';
 import {Link} from 'react-router-dom';
-import Loadable from 'react-loadable';
 import {Route, Switch } from 'react-router-dom';
 import Page from '../containers/Page';
-
+import '../assets/css/my.less'
 
 class Home extends Component{
 
@@ -26,7 +25,6 @@ class Home extends Component{
 
           <Route exact={true} path='/page' component={Page} key='page' thunk={()=>{}} />
         </div>
-
       </div>
     )
   }

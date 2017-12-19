@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions  from '../store/actions/home';
 import {Link } from 'react-router-dom';
-
+import '../assets/css/index.less';
 class User extends Component{
   handerClick(e){
     import(/* webpackChunkName: 'Model' */'./Model.js').then(({default:Model})=>{

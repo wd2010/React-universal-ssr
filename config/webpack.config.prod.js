@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const { ReactLoadablePlugin } =require('react-loadable/webpack') ;
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const isServer=process.env.BUILD_TYPE==='server';
 const rootPath=path.join(__dirname,'../');
 
@@ -48,39 +49,50 @@ const prodConfig={
           }
         }
       },{
-        test:/\.(css|sess)$/,
+        test:/\.(css|less)$/,
         exclude:/node_modules/,
         include: path.resolve(rootPath, "src"),
         use: ExtractTextPlugin.extract({
-          fallback:{
-            loader: 'style-loader',//style-loader 将css插入到页面的style标签
-            options:{singleton:true}
-          },
+          fallback: 'style-loader',//style-loader将css chunk 插入到html中
           use:[{
             loader: 'css-loader',//css-loader 是处理css文件中的url(),require()等
             options: {
               minimize:true,
-              importLoader:1,
             }
           },{
             loader:'postcss-loader',
             options: {
-              plugins:()=>[autoprefixer({browsers:'last 5 versions'})],
+              plugins:()=>[require('autoprefixer')({browsers:'last 5 versions'})],
               minimize:true,
             }
           },{
-            loader:'sess-loader',
+            loader:'less-loader',
             options:{
               minimize:true,
             }
           }]
         }),
+      },{
+        test: /\.(svg|woff2?|ttf|eot|jpe?g|png|gif)(\?.*)?$/i,
+        exclude:/node_modules/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 1024,
+            name: 'img/[sha512:hash:base64:7].[ext]'
+          }
+        }
       }
     ]
   },
   plugins:[
     new ManifestPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
+    new ExtractTextPlugin({
+      filename: 'css/style.[hash].css',
+      allChunks: true,
+      disable: isServer ,
+    }),
     new CopyWebpackPlugin([{from:'favicon.ico',to:rootPath+'./dist/client'}]),
     new CleanWebpackPlugin([`./dist/${isServer?'server':'client'}`],{root: rootPath,}),
     new webpack.DefinePlugin({
@@ -89,7 +101,6 @@ const prodConfig={
     new webpack.optimize.OccurrenceOrderPlugin(),
   ].concat(isServer?[
     //server ----------
-
   ]:[
     //client-----------
     new HtmlWebpackPlugin({
@@ -104,6 +115,7 @@ const prodConfig={
     new ReactLoadablePlugin({
       filename: path.join(rootPath,'./dist/server/react-loadable.json'),
     }),
+
   ])
 }
 

@@ -42,28 +42,24 @@ const devConfig={
           }
         }
       },{
-        test:/\.(css|sess)$/,
+        test:/\.(css|less)$/,
         exclude:/node_modules/,
         include: path.resolve(rootPath, "src"),
         use: ExtractTextPlugin.extract({
-          fallback:{
-            loader: 'style-loader',//style-loader 将css插入到页面的style标签
-            options:{singleton:true},//单例模式
-          },
+          fallback:'style-loader',//style-loader 将css插入到页面的style标签
           use:[{
             loader: 'css-loader',//css-loader 是处理css文件中的url(),require()等
             options: {
               sourceMap:true,
-              importLoader:1,
             }
           },{
             loader:'postcss-loader',
             options: {
-              plugins:()=>[autoprefixer({browsers:'last 5 versions'})],
+              plugins:()=>[require("autoprefixer")({browsers:'last 5 versions'})],
               sourceMap:true,
             }
           },{
-            loader:'sess-loader',
+            loader:'less-loader',
             options:{
               sourceMap:true,
             }
@@ -77,6 +73,7 @@ const devConfig={
     new CopyWebpackPlugin([{from:'favicon.ico'}]),
     new webpack.HotModuleReplacementPlugin(),
     new ProgressBarPlugin({summary: false}),
+    new ExtractTextPlugin({filename: 'style.[hash].css',}),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV':JSON.stringify(process.env.NODE_ENV||'development')
     }),
