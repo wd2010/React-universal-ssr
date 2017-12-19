@@ -18,13 +18,8 @@ class Home extends Component{
       <div>
         <p>{count}</p>
         <p>名字：{name} - 年龄：{age}</p>
-        <button onClick={()=>add(count+1)}>dr6</button>
-        <Link to='/user'>rrdr </Link>
-        <Link to='/page' > Padge</Link>
-        <div style={{width:'100px',height:'100px',borderColor:'1px solid red'}}>
-
-          <Route exact={true} path='/page' component={Page} key='page' thunk={()=>{}} />
-        </div>
+        <button onClick={()=>add(count+1)}>增加</button>
+        <Link to='/user'>User</Link>
       </div>
     )
   }
