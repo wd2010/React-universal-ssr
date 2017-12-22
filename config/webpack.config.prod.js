@@ -11,27 +11,19 @@ const rootPath=path.join(__dirname,'../');
 
 const prodConfig={
   context: path.join(rootPath,'./src'),
-  entry:()=>{
-    if(isServer){
-      return {
-        server: './app/index.js',
-      }
-    }else{
-      return {
-        client:'./index.js',
-        vendors:['react','react-dom','react-loadable','react-redux','redux','react-router-dom','react-router-redux','redux-thunk'],
-      }
-    }
+  entry: {
+    client:'./index.js',
+    vendors:['react','react-dom','react-loadable','react-redux','redux','react-router-dom','react-router-redux','redux-thunk'],
   },
   output:{
     filename:'[name].[hash:8].js',
-    path:path.resolve(rootPath,isServer?'./dist/server':'./dist/client'),
+    path:path.resolve(rootPath,'./dist'),
     publicPath:'/',
     chunkFilename: '[name]-[hash:8].js',
-    libraryTarget: 'umd',
+    // libraryTarget: isServer?'commonjs2':'umd',
   },
   resolve:{
-    extensions:[".js",".jsx","css","less","scss","png","jpg"],
+    extensions:[".js",".jsx",".css",".less",".scss",".png",".jpg"],
     modules:[path.resolve(rootPath, "src"), "node_modules"],
   },
   module:{
@@ -44,16 +36,16 @@ const prodConfig={
           loader:'babel-loader',
           options:{
             presets: ['env', 'react', 'stage-0'],
-            plugins: isServer ? ['dynamic-import-webpack','remove-webpack',"react-loadable/babel"] : ['transform-runtime',"react-loadable/babel",],//server 动态加载的Home和User,require动态加载时会导致一些全局问题，remove-webpack使用IIFE自动执行函数解决
+            plugins: ['transform-runtime', 'add-module-exports'] ,
             cacheDirectory: true,
           }
         }
       },{
-        test:/\.(css|less)$/,
+        test:/\.(css|scss)$/,
         exclude:/node_modules/,
         include: path.resolve(rootPath, "src"),
         use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',//style-loader将css chunk 插入到html中
+          fallback:'style-loader',//style-loader将css chunk 插入到html中
           use:[{
             loader: 'css-loader',//css-loader 是处理css文件中的url(),require()等
             options: {
@@ -66,7 +58,7 @@ const prodConfig={
               minimize:true,
             }
           },{
-            loader:'less-loader',
+            loader:'sass-loader',
             options:{
               minimize:true,
             }
@@ -91,18 +83,13 @@ const prodConfig={
     new ExtractTextPlugin({
       filename: 'css/style.[hash].css',
       allChunks: true,
-      disable: isServer ,
     }),
-    new CopyWebpackPlugin([{from:'favicon.ico',to:rootPath+'./dist/client'}]),
-    new CleanWebpackPlugin([`./dist/${isServer?'server':'client'}`],{root: rootPath,}),
+    new CopyWebpackPlugin([{from:'favicon.ico',to:rootPath+'./dist'}]),
+    new CleanWebpackPlugin(['./dist'],{root: rootPath,}),
     new webpack.DefinePlugin({
-      'process.env.BUILD_TYPE':JSON.stringify(process.env.BUILD_TYPE)
+      'process.env.NODE_ENV':JSON.stringify(process.env.NODE_ENV)
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
-  ].concat(isServer?[
-    //server ----------
-  ]:[
-    //client-----------
     new HtmlWebpackPlugin({
       title:'yyy',
       filename:'index.html',
@@ -113,10 +100,9 @@ const prodConfig={
       minChunks:2
     }),
     new ReactLoadablePlugin({
-      filename: path.join(rootPath,'./dist/server/react-loadable.json'),
+      filename: path.join(rootPath,'./dist/react-loadable.json'),
     }),
-
-  ])
+  ]
 }
 
 module.exports=prodConfig

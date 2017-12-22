@@ -2,8 +2,10 @@ import React from 'react';
 import Loadable from 'react-loadable';
 import {homeThunk} from '../../store/actions/thunk';
 
-const Loading=(props)=>
-  <div>Loading...</div>
+const Loading=(props)=>{
+  console.log(props)
+  return <div>Loading...</div>
+}
 
 const LoadableHome = Loadable({
   loader: () =>import(/* webpackChunkName: 'Home' */'../../containers/Home'),

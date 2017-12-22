@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions  from '../store/actions/home';
 import {Link } from 'react-router-dom';
-import '../assets/css/index.less';
+// import '../assets/css/index.scss';
 
 class User extends Component{
 

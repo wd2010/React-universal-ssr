@@ -1,9 +1,10 @@
+require('./ignore.js')();
 require('babel-polyfill');
 require('babel-register')({
-
   presets: ['env', 'react', 'stage-0'],
   plugins: ["react-loadable/babel",'syntax-dynamic-import',"dynamic-import-node"]
 });
+
 
 const app=require('./app.js').default,
   clientRouter=require('./clientRouter.js').default,
@@ -13,7 +14,7 @@ const app=require('./app.js').default,
   Loadable=require('react-loadable');
 
 app.use(clientRouter);
-app.use(staticCache (path.resolve(__dirname,'../dist/client/'),{
+app.use(staticCache (path.resolve(__dirname,'../dist'),{
   maxAge: 365 * 24 * 60 * 60,
   gzip:true
 }));

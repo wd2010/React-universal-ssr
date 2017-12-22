@@ -5,8 +5,7 @@ import * as actions  from '../store/actions/home';
 import {Link} from 'react-router-dom';
 import {Route, Switch } from 'react-router-dom';
 import Page from '../containers/Page';
-import '../assets/css/my.less'
-
+import style from '../assets/css/my.scss'
 class Home extends Component{
 
   componentDidMount(){
@@ -18,7 +17,7 @@ class Home extends Component{
       <div>
         <p>{count}</p>
         <p>名字：{name} - 年龄：{age}</p>
-        <button onClick={()=>add(count+1)}>增加</button>
+        <button style={{backgroundColor:'#eee'}} onClick={()=>add(count+1)}>增加</button>
         <Link to='/user'>User</Link>
       </div>
     )
