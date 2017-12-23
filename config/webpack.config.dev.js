@@ -42,7 +42,7 @@ const devConfig={
           }
         }
       },{
-        test:/\.(css|less)$/,
+        test:/\.(css|scss)$/,
         exclude:/node_modules/,
         include: path.resolve(rootPath, "src"),
         use: ExtractTextPlugin.extract({
@@ -59,7 +59,7 @@ const devConfig={
               sourceMap:true,
             }
           },{
-            loader:'less-loader',
+            loader:'sass-loader',
             options:{
               sourceMap:true,
             }
