@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-dev-server --hotOnly --progress --config ./config/webpack.config.dev.js ",
     "build": "cross-env NODE_ENV=production webpack --progress -p --config ./config/webpack.config.prod.js",
-    "server": "nodemon ./server/index.js --watch config --watch server",
+    "server": "cross-env NODE_ENV=production nodemon ./server/index.js --watch config --watch server",
     "dev:server": "npm run build && npm run server"
   },
   "author": "",

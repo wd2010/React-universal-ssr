@@ -4,6 +4,7 @@ import Routers from './router/index';
 import Loadable from 'react-loadable';
 
 const createApp=({store,history,modules})=>{
+  console.log(process.env.NODE_ENV==='production',process.env.NODE_ENV)
   if(process.env.NODE_ENV==='production'){
     return (
       <Loadable.Capture report={moduleName => modules.push(moduleName)}>
@@ -12,6 +13,7 @@ const createApp=({store,history,modules})=>{
         </Provider>
       </Loadable.Capture>
     )
+
   }else{
     return (
       <Provider store={store}>
@@ -19,7 +21,7 @@ const createApp=({store,history,modules})=>{
       </Provider>
     )
   }
-}
 
+}
 
 export default createApp;
