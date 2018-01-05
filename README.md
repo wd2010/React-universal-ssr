@@ -2,6 +2,7 @@
 webpack+router4+按需加载+webpack-dev-server
 
 开发环境使用webpack-dev-server做服务端，实现热加载，生产环境使用koa做后端，实现按需加载，页面渲染前加载数据
+具体介绍可以查看 https://juejin.im/post/5a392018f265da431b6d5501
 
 1. npm install
 2. npm start 运行开发版环境
